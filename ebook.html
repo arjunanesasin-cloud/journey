@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Flipbook Majalah Digital</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/blasten/turn.js/turn.min.js"></script>
+
+<style>
+
+body{
+margin:0;
+font-family:Poppins;
+height:100vh;
+display:flex;
+align-items:center;
+justify-content:center;
+overflow:hidden;
+
+/* background gradien animasi */
+
+background:linear-gradient(270deg,#1e3a8a,#0f172a,#0ea5e9,#020617);
+background-size:800% 800%;
+animation:gradientMove 15s ease infinite;
+}
+
+@keyframes gradientMove{
+0%{background-position:0% 50%}
+50%{background-position:100% 50%}
+100%{background-position:0% 50%}
+}
+
+/* buku */
+
+#flipbook{
+width:900px;
+height:600px;
+box-shadow:0 30px 80px rgba(0,0,0,0.6);
+}
+
+/* halaman */
+
+.page{
+width:450px;
+height:600px;
+background:white;
+overflow:hidden;
+position:relative;
+}
+
+/* slider foto */
+
+.photoSlider{
+width:100%;
+height:60%;
+overflow-x:auto;
+display:flex;
+scroll-snap-type:x mandatory;
+}
+
+.photoSlider img{
+width:100%;
+height:100%;
+object-fit:cover;
+flex-shrink:0;
+scroll-snap-align:center;
+transition:transform 6s;
+}
+
+/* efek gerak foto */
+
+.photoSlider img:hover{
+transform:scale(1.15);
+}
+
+/* teks */
+
+.text{
+padding:20px;
+font-size:14px;
+line-height:1.7;
+}
+
+/* tombol */
+
+.controls{
+position:absolute;
+bottom:20px;
+left:50%;
+transform:translateX(-50%);
+}
+
+button{
+padding:10px 20px;
+border:none;
+background:#111;
+color:white;
+border-radius:6px;
+margin:5px;
+cursor:pointer;
+}
+
+.zoomed{
+transform:scale(1.4);
+transition:0.5s;
+}
+
+</style>
+</head>
+
+<body>
+
+<div id="flipbook"></div>
+
+<div class="controls">
+<button onclick="prevPage()">⬅ Prev</button>
+<button onclick="nextPage()">Next ➡</button>
+<button onclick="zoomPage()">🔍 Zoom</button>
+</div>
+
+<audio id="flipSound">
+<source src="https://assets.mixkit.co/active_storage/sfx/2018/2018-preview.mp3">
+</audio>
+
+<script>
+
+let totalPages=20
+let flipbook=document.getElementById("flipbook")
+
+for(let i=1;i<=totalPages;i++){
+
+let page=document.createElement("div")
+page.className="page"
+
+page.innerHTML=`
+
+<div class="photoSlider">
+
+<img src="foto/foto1.jpg">
+<img src="foto/foto2.jpg">
+<img src="foto/foto3.jpg">
+
+</div>
+
+<div class="text">
+
+<h2>Halaman ${i}</h2>
+
+<p>
+Flipbook ini menampilkan galeri foto yang dapat digeser secara horizontal.
+Pengguna dapat menggeser gambar menggunakan mouse atau layar sentuh
+untuk melihat foto berikutnya. Efek zoom pada gambar memberikan
+kesan hidup seperti desain majalah digital modern.
+
+Sistem ini sangat cocok digunakan untuk majalah sekolah, portofolio,
+buku kenangan, atau galeri kegiatan Pramuka.
+</p>
+
+</div>
+`
+
+flipbook.appendChild(page)
+
+}
+
+$("#flipbook").turn({
+width:900,
+height:600,
+autoCenter:true
+})
+
+$("#flipbook").bind("turning", function(){
+document.getElementById("flipSound").play()
+})
+
+function nextPage(){
+$("#flipbook").turn("next")
+}
+
+function prevPage(){
+$("#flipbook").turn("previous")
+}
+
+function zoomPage(){
+document.getElementById("flipbook").classList.toggle("zoomed")
+}
+
+</script>
+
+</body>
+</html>
