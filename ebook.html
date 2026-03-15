@@ -4,191 +4,427 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Flipbook Majalah Digital</title>
+<title>Perjalanan Guru | Eka Amin Hidayat</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/gh/blasten/turn.js/turn.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 
 <style>
 
-body{
+*{
 margin:0;
-font-family:Poppins;
-height:100vh;
+padding:0;
+box-sizing:border-box;
+font-family:'Poppins',sans-serif;
+}
+
+body{
+background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+color:white;
+scroll-behavior:smooth;
+overflow-x:hidden;
+}
+
+/* NAVBAR */
+
+nav{
+position:fixed;
+top:0;
+width:100%;
+background:rgba(0,0,0,0.5);
+backdrop-filter:blur(10px);
 display:flex;
-align-items:center;
 justify-content:center;
-overflow:hidden;
-
-/* background gradien animasi */
-
-background:linear-gradient(270deg,#1e3a8a,#0f172a,#0ea5e9,#020617);
-background-size:800% 800%;
-animation:gradientMove 15s ease infinite;
+gap:25px;
+padding:15px;
+z-index:1000;
 }
 
-@keyframes gradientMove{
-0%{background-position:0% 50%}
-50%{background-position:100% 50%}
-100%{background-position:0% 50%}
+nav a{
+color:white;
+text-decoration:none;
+font-weight:500;
+transition:0.3s;
 }
 
-/* buku */
-
-#flipbook{
-width:900px;
-height:600px;
-box-shadow:0 30px 80px rgba(0,0,0,0.6);
+nav a:hover{
+color:#00eaff;
 }
 
-/* halaman */
+/* COVER IMAGE */
 
-.page{
-width:450px;
-height:600px;
-background:white;
+.hero-img{
+width:100%;
+height:70vh;
 overflow:hidden;
 position:relative;
+margin-top:60px;
 }
 
-/* slider foto */
-
-.photoSlider{
-width:100%;
-height:60%;
-overflow-x:auto;
-display:flex;
-scroll-snap-type:x mandatory;
-}
-
-.photoSlider img{
+.hero-img img{
 width:100%;
 height:100%;
 object-fit:cover;
-flex-shrink:0;
-scroll-snap-align:center;
-transition:transform 6s;
+display:block;
 }
 
-/* efek gerak foto */
-
-.photoSlider img:hover{
-transform:scale(1.15);
-}
-
-/* teks */
-
-.text{
-padding:20px;
-font-size:14px;
-line-height:1.7;
-}
-
-/* tombol */
-
-.controls{
+.hero-overlay{
 position:absolute;
-bottom:20px;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(15,32,39,0.95));
+}
+
+/* HERO TEXT */
+
+.hero{
+position:absolute;
+top:35%;
 left:50%;
-transform:translateX(-50%);
+transform:translate(-50%,-50%);
+text-align:center;
+width:90%;
 }
 
-button{
-padding:10px 20px;
-border:none;
-background:#111;
-color:white;
-border-radius:6px;
-margin:5px;
-cursor:pointer;
+.hero h1{
+font-size:50px;
+margin-bottom:10px;
 }
 
-.zoomed{
-transform:scale(1.4);
-transition:0.5s;
+.hero p{
+opacity:0.9;
 }
 
+/* SECTION */
+
+section{
+padding:120px 20px;
+max-width:900px;
+margin:auto;
+}
+
+/* CARD */
+
+.card{
+background:rgba(255,255,255,0.05);
+backdrop-filter:blur(15px);
+border-radius:15px;
+padding:30px;
+margin-top:30px;
+box-shadow:0 10px 30px rgba(0,0,0,0.3);
+
+transform:translateY(40px);
+opacity:0;
+transition:1s;
+}
+
+.card.show{
+transform:translateY(0);
+opacity:1;
+}
+
+/* PARTIKEL */
+
+canvas{
+position:fixed;
+top:0;
+left:0;
+z-index:-1;
+}
+
+/* FOOTER */
+
+footer{
+text-align:center;
+padding:40px;
+opacity:0.6;
+}
+/* ========================= */
+/* RESPONSIVE MOBILE */
+/* ========================= */
+
+@media (max-width:768px){
+
+nav{
+flex-wrap:wrap;
+gap:10px;
+padding:10px;
+font-size:13px;
+}
+
+.hero-img{
+height:50vh;
+}
+
+.hero{
+top:40%;
+}
+
+.hero h1{
+font-size:28px;
+}
+
+.hero p{
+font-size:14px;
+}
+
+section{
+padding:80px 15px;
+}
+
+h2{
+font-size:22px;
+}
+
+.card{
+padding:20px;
+font-size:15px;
+line-height:1.6;
+}
+
+footer{
+font-size:13px;
+}
+.divider{
+width:100%;
+height:3px;
+background:linear-gradient(to right, transparent, #00eaff, transparent);
+margin:40px 0 20px 0;
+opacity:0.8;
+}
+}
 </style>
 </head>
 
 <body>
 
-<div id="flipbook"></div>
+<canvas id="particles"></canvas>
 
-<div class="controls">
-<button onclick="prevPage()">⬅ Prev</button>
-<button onclick="nextPage()">Next ➡</button>
-<button onclick="zoomPage()">🔍 Zoom</button>
+<nav>
+
+<a href="#pendahuluan">Pendahuluan</a>
+<a href="#bab1">Bab 1</a>
+<a href="#bab2">Bab 2</a>
+<a href="#bab3">Bab 3</a>
+<a href="#bab4">Bab 4</a>
+<a href="#metafora">Metafora</a>
+
+</nav>
+
+<!-- FOTO COVER -->
+
+<div class="hero-img">
+
+<img src="buku.jpeg" alt="Perjalanan Guru">
+
+<div class="hero-overlay"></div>
+
+<div class="hero">
+
+<h1>A LIFE JOURNEY BOOK</h1>
+<p>Kisah perjalanan,Perjuanganku</p>
+
 </div>
 
-<audio id="flipSound">
-<source src="https://assets.mixkit.co/active_storage/sfx/2018/2018-preview.mp3">
-</audio>
+</div>
+
+</div>
+
+<div class="divider"></div>
+
+<section id="pendahuluan">
+
+<div class="card">
+<p>
+Tulisan ini merupakan kisah perjalanan seorang guru honorer dalam menapaki jalan hidup hingga menjadi seorang pendidik. Kisah yang disajikan tidak dimaksudkan untuk merendahkan atau menyinggung instansi mana pun. Seluruh isi tulisan ini sepenuhnya menjadi tanggung jawab penulis.
+
+Tulisan ini disusun sebagai bentuk refleksi perjalanan hidup yang diharapkan dapat menjadi sumber motivasi dan pelajaran berharga bagi pembaca. Di dalamnya tergambar pengalaman, perjuangan, serta proses pembelajaran hidup yang dialami oleh penulis.
+
+Sebelum diterbitkan, tulisan ini akan melalui proses pertimbangan sesuai dengan prosedur yang berlaku, mengingat terdapat keterkaitan dengan dua institusi yang terlibat dalam perjalanan kisah tersebut.
+</p>
+</div>
+
+</section>
+
+<section id="bab1">
+
+<h2>Bab 1 — Awal Perjalanan</h2>
+
+<div class="card">
+<p>
+Perjalanan ini berawal ketika aku lulus kuliah dan menjalani pekerjaan pertamaku sebagai pegawai tata usaha. Peran ini sama sekali tidak pernah terlintas dalam rencana hidupku sebelumnya. Tugas utamaku adalah membantu para guru dalam berbagai urusan administrasi dan manajemen sekolah, mulai dari mengelola berkas, menyiapkan dokumen, hingga mengantarkan surat ke dinas. Terkadang aku juga mewakili sekolah dalam rapat-rapat tertentu.
+</p>
+
+<p>
+Pekerjaan ini datang begitu saja, seolah takdir yang membawaku ke jalan ini. Pada awalnya terasa asing dan jauh dari impian yang pernah kubayangkan. Dengan gaji sebagai pegawai tata usaha honorer yang hanya sekitar lima ratus ribu rupiah per bulan, aku harus menerima kenyataan hidup yang sederhana. Bahkan, sering kali jumlah itu terasa belum cukup untuk memenuhi kebutuhan sehari-hari.
+</p>
+
+<p>
+Jarak antara tempat tinggalku dan tempat kerja pun tidak dekat, sekitar 54 kilometer. Aku berasal dari Majalengka Utara, tepatnya di Kecamatan Jatitujuh, sementara tempat tugasku berada di SMP Negeri 1 Banjaran yang terletak di wilayah Majalengka Selatan. Perjalanan itu benar-benar dari ujung ke ujung. Setiap hari aku harus menempuh jarak yang panjang, yang perlahan menjadi bagian dari perjuanganku dalam menjalani kehidupan.
+</p>
+
+<p>
+Perjalanan tersebut menguji kesabaran, keikhlasan, dan keteguhan hati. Namun aku memilih untuk menjalaninya dengan penuh keyakinan. Dalam hati aku selalu berkata, biarlah Allah yang mencukupkan kebutuhanku dan mengatur rezeki dalam hidupku.
+</p>
+
+<p>
+Di tempat itu pula aku menemukan arti kebersamaan. Aku memiliki lima orang teman yang memiliki pekerjaan serupa selain para guru. Lambat laun mereka bukan lagi sekadar rekan kerja, melainkan telah menjadi bagian dari keluargaku. Kami saling menguatkan dalam keterbatasan, berbagi cerita, dan bertahan bersama dalam perjalanan hidup yang penuh makna.
+</p>
+</div>
+
+</section>
+
+<section id="bab2">
+
+<h2>Bab 2 — Pembina Pramuka</h2>
+
+<div class="card">
+<p>
+Ketika kepala sekolah menugaskanku menjadi Pembina Pramuka, sebenarnya aku tidak terlalu memahami dunia kepramukaan secara mendalam. Pengalaman yang kumiliki hanya sebatas ketika aku masih duduk di bangku SMP, saat pertama kali mengenal kegiatan pramuka. Sejujurnya, pada awal menerima tugas tersebut aku merasa bingung harus memulai dari mana dan apa yang harus kulakukan.
+</p>
+
+<p>
+Bahkan pada saat itu aku merasa bahwa para siswa justru lebih memahami kegiatan pramuka dibandingkan diriku sendiri. Mereka juga mengetahui bahwa pengetahuanku tentang pramuka masih sangat terbatas. Namun demikian, tugas tetaplah amanah yang harus dijalankan dengan penuh tanggung jawab.
+</p>
+
+<p>
+Peranku pada saat itu lebih banyak sebagai pendamping bagi para siswa dalam setiap kegiatan pramuka. Aku menemani mereka ketika berlatih, mendampingi ketika mereka mengikuti kegiatan di luar sekolah, serta memastikan bahwa mereka dapat pergi dan kembali dengan aman. Kehadiranku lebih sebagai sosok yang membersamai dan memberikan dukungan selama proses kegiatan berlangsung.
+</p>
+
+<p>
+Mungkin kepala sekolah menunjukku karena usiaku yang masih muda sehingga dianggap memiliki waktu dan tenaga lebih untuk mendampingi para siswa dalam berbagai kegiatan. Selain itu, pada saat itu aku juga belum menikah sehingga tidak banyak batasan waktu yang harus kubagi, dan aku dapat lebih leluasa hadir bersama mereka dalam berbagai kegiatan kepramukaan.
+</p>
+</div>
+</section>
+
+<section id="bab3">
+
+<h2>Bab 3 — Makna Pengabdian</h2>
+
+<div class="card">
+<p>
+Pengabdian seorang guru tidak selalu terlihat secara langsung.
+Namun ilmu yang diberikan akan hidup dalam perjalanan
+para siswa di masa depan.
+</p>
+</div>
+
+</section>
+
+<section id="bab4">
+
+<h2>Bab 4 — Harapan Masa Depan</h2>
+
+<div class="card">
+<p>
+Pendidikan selalu berkembang mengikuti zaman.
+Guru harus terus belajar dan beradaptasi agar mampu
+menjadi penerang bagi generasi berikutnya.
+</p>
+</div>
+
+</section>
+
+<section id="metafora">
+
+<h2>Metafora & Pemahaman Bermakna</h2>
+
+<div class="card">
+<p>
+Guru adalah seperti pelita yang menerangi jalan dalam kegelapan.
+Cahayanya mungkin kecil, tetapi mampu memberikan arah
+bagi banyak orang yang sedang mencari jalan.
+</p>
+</div>
+
+</section>
+
+<footer>
+© 2026 Buku Digital Perjalanan Guru
+</footer>
 
 <script>
 
-let totalPages=20
-let flipbook=document.getElementById("flipbook")
+/* ANIMASI CARD */
 
-for(let i=1;i<=totalPages;i++){
+const cards=document.querySelectorAll(".card");
 
-let page=document.createElement("div")
-page.className="page"
+window.addEventListener("scroll",()=>{
 
-page.innerHTML=`
+cards.forEach(card=>{
 
-<div class="photoSlider">
+const top=card.getBoundingClientRect().top;
 
-<img src="foto/foto1.jpg">
-<img src="foto/foto2.jpg">
-<img src="foto/foto3.jpg">
+if(top<window.innerHeight-100){
 
-</div>
-
-<div class="text">
-
-<h2>Halaman ${i}</h2>
-
-<p>
-Flipbook ini menampilkan galeri foto yang dapat digeser secara horizontal.
-Pengguna dapat menggeser gambar menggunakan mouse atau layar sentuh
-untuk melihat foto berikutnya. Efek zoom pada gambar memberikan
-kesan hidup seperti desain majalah digital modern.
-
-Sistem ini sangat cocok digunakan untuk majalah sekolah, portofolio,
-buku kenangan, atau galeri kegiatan Pramuka.
-</p>
-
-</div>
-`
-
-flipbook.appendChild(page)
+card.classList.add("show");
 
 }
 
-$("#flipbook").turn({
-width:900,
-height:600,
-autoCenter:true
 })
 
-$("#flipbook").bind("turning", function(){
-document.getElementById("flipSound").play()
 })
 
-function nextPage(){
-$("#flipbook").turn("next")
+/* PARTIKEL */
+
+const canvas=document.getElementById("particles");
+const ctx=canvas.getContext("2d");
+
+canvas.width=window.innerWidth;
+canvas.height=window.innerHeight;
+
+let particles=[];
+
+for(let i=0;i<100;i++){
+
+particles.push({
+
+x:Math.random()*canvas.width,
+y:Math.random()*canvas.height,
+r:Math.random()*2,
+d:Math.random()*0.7
+
+})
+
 }
 
-function prevPage(){
-$("#flipbook").turn("previous")
+function draw(){
+
+ctx.clearRect(0,0,canvas.width,canvas.height);
+
+ctx.fillStyle="white";
+
+particles.forEach(p=>{
+
+ctx.beginPath();
+ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+ctx.fill();
+
+})
+
+update();
+
 }
 
-function zoomPage(){
-document.getElementById("flipbook").classList.toggle("zoomed")
+function update(){
+
+particles.forEach(p=>{
+
+p.y+=p.d;
+
+if(p.y>canvas.height){
+
+p.y=0;
+p.x=Math.random()*canvas.width;
+
 }
+
+})
+
+}
+
+setInterval(draw,33);
 
 </script>
 
